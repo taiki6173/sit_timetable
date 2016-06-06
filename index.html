@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<!--
+Horizons by TEMPLATED
+templated.co @templatedco
+Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+
+<head>
+    <title>Timetable - AL14099</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <!--[if lte IE 8]><script src="/~al14099/css/ie/html5shiv.js"></script><![endif]-->
+    <script src="/~al14099/js/jquery.min.js"></script>
+    <script src="/~al14099/js/jquery.dropotron.min.js"></script>
+    <script src="/~al14099/js/skel.min.js"></script>
+    <script src="/~al14099/js/skel-layers.min.js"></script>
+    <script src="/~al14099/js/init.js"></script>
+    <script src="/~al14099/js/smoothscroll.js"></script>
+    <script src="/~al14099/js/jquery.inview.min.js"></script>
+    <script src="/~al14099/js/goToTop.js"></script>
+    <script src="./js/timetable.js"></script>
+    <script src="./js/jquery.xdomainajax.js"></script>
+    <script src="./js/jquery.base64.js"></script>
+
+    <link rel="apple-touch-icon-precomposed" href="/~al14099/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="/~al14099/css/table.css" />
+    <noscript>
+        <link rel="stylesheet" href="/~al14099/css/skel.css" />
+        <link rel="stylesheet" href="/~al14099/css/style.css" />
+    </noscript>
+    <style>
+        td {
+            height: 100px;
+            width: 16.666%!important;
+            width: calc(16.666%-4px)!important;
+        }
+
+        td.canceled {
+            background: pink
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        table select {
+            border: 2px solid #666;
+            background: none;
+            font-size: 0.9em;
+            word-wrap: break-word;
+            white-space: normal;
+            vertical-align: middle;
+            height: 6em;
+            width: 80%;
+        }
+
+        h3 select {
+            font: inherit;
+            border: 1px solid #333;
+            padding: 0.5em;
+            background: none;
+        }
+
+        .button {
+            margin: 20px;
+            /*for the templete*/
+            /*
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            */
+        }
+
+        .narrower .button {
+            margin: 2em 0;
+        }
+
+        #commandButtons,
+        #retry,
+        #remove {
+            display: none;
+        }
+
+        #retry,
+        #remove {
+            width: 10em;
+        }
+        /* 設定関連スタイル*/
+
+        #content.blur {
+            -webkit-transition: 1s -webkit-filter linear;
+            -webkit-filter: blur(20px);
+            -moz-filter: blur(20px);
+            filter: blur(20px);
+        }
+
+        .float {
+            z-index: 999;
+            height: 400px;
+            width: 750px;
+            background: #eee;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            padding: 3em;
+            border-radius: 2em;
+            box-shadow: #333 0 10px 60px;
+            display: none;
+        }
+
+        .narrower .float {
+            width: 90%;
+            height: 90%;
+            margin: auto;
+            position: fixed;
+            top: 3em;
+            padding: 3em;
+            border-radius: 1em;
+        }
+
+        .narrower label {
+            display: block;
+        }
+
+        #setting > * {
+            display: none;
+            text-align: center;
+            height: 50%;
+        }
+
+        #settingButtons {
+            display: block;
+            position: absolute;
+            height: auto;
+            left: 3em;
+            right: 3em;
+            bottom: 1em;
+        }
+
+        #page {
+            display: none;
+            width: 5em;
+            margin: 0.5em;
+            text-align: center;
+        }
+
+        #confirmMsg table tr > *,
+        #titleInfo table tr > * {
+            height: auto;
+            width: auto!important;
+        }
+
+        #confirmMsg table tr:nth-child(even),
+        #titleInfo table tr:nth-child(even) {
+            background: #ddd;
+        }
+
+        #titleInfo {
+            display: none;
+        }
+
+        #titleInfo table {
+            width: 20em
+        }
+
+        #titleInfo table tr > * {
+            padding-left: 1em;
+        }
+
+        #setting label,
+        #setting select {
+            padding: 0.5em;
+            font-size: 1.5em;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .narrower #setting .button {
+            margin: 0;
+            min-width: 8em;
+        }
+    </style>
+    <!--[if lte IE 8]><link rel="stylesheet" href="/~al14099/css/ie/v8.css" /><![endif]-->
+</head>
+
+<body class="no-sidebar">
+
+    <!-- メイン画面 -->
+    <div id="content">
+        <!-- Header -->
+        <div id="header">
+            <div class="container">
+
+                <!-- Logo -->
+                <h1><a href="./" id="logo">Timetable</a></h1>
+
+                <!-- Nav -->
+                <nav id="nav">
+                    <ul>
+                        <li><a href="">使い方</a></li>
+                        <li><a href="">注意事項</a></li>
+                        <li><a href="">このアプリについて</a></li>
+                        <!--<li><a href="/~al14099/aboutme.html">About me</a></li>-->
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+        <div id="main" class="wrapper style2">
+            <section class="container">
+                <header class="major">
+                    <h2></h2>
+                    <div id="titleInfo"></div>
+                </header>
+                <div id="commandButtons"><a id="clear" class="button alt">クリア</a><a id="done" class="button alt">保存</a><a id="edit" class="button alt">はじめから</a></div>
+                <a id="retry" class="button alt">やり直す</a>
+                <div class="scroll">
+                    <table class="timetable">
+                        <thead>
+                            <tr>
+                                <th class="r1"></th>
+                                <th class="r3">Mon.</th>
+                                <th class="r3">Tue.</th>
+                                <th class="r3">Wed.</th>
+                                <th class="r3">Thu.</th>
+                                <th class="r3">Fri.</th>
+                                <th class="r3">Sat.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="r1">1st</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">2nd</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">3rd</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">4th</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">5th</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">6th</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                            <tr>
+                                <th class="r1">7th</th>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                                <td class="r2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p id="sumOfCredits"></p>
+
+                <a id="remove" class="button">データを消去</a>
+            </section>
+
+            <section>
+
+                <a id="import" class="button">インポート</a>
+                <a id="export" class="button">エクスポート</a>
+                <textarea id="portArea"></textarea>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div id="footer">
+            <div class="container">
+                <!-- Breadcrumb -->
+                <nav id="bread">
+                    <ul>
+                        <li><a href="/~al14099/">Home</a></li>
+                        <li><a href="/~al14099/lab/">Lab</a></li>
+                        <li><a href="/~al14099/lab/timetable/">Timetable</a></li>
+                    </ul>
+                </nav>
+                <div id="gototop">
+                    <a href="#header">Go to Top</a>
+                </div>
+                <!-- Copyright -->
+                <div class="copyright">
+                    Design: <a href="http://templated.co">TEMPLATED</a>
+                    <br>Copyright &copy; 2014 - 2016 <a href="/~al14099/">AL14099</a> All rights reserved.
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 設定画面 skel-layers-fixedはskel-layers.min.js用-->
+    <div id="setting" class="skel-layers-fixed float">
+        <div id="welcomeMsg">
+            <h3>ようこそ！</h3>
+            <p>これは芝浦工業大学の学生向け時間割作成アプリです。
+                <br> まずは、学部・学科など5つの質問にお答えください。
+            </p>
+            <p>
+                ※入力されたすべてのデータはあなたの端末上で処理され、
+                <br>外部へ送信・収集されることはありません。
+            </p>
+        </div>
+        <div id="selectFac">
+            <h3>学部を選択してください：</h3>
+            <label>
+                <input type="radio" name="faculty" value="0" checked>工学部</label>
+            <label>
+                <input type="radio" name="faculty" value="1">システム理工学部</label>
+            <label>
+                <input type="radio" name="faculty" value="2">デザイン工学部</label>
+        </div>
+        <div id="selectDep">
+            <h3>学科・専攻を選択してください：</h3>
+            <select name="department">
+            </select>
+        </div>
+        <div id="selectGra">
+            <h3>履修している科目の学年を選択してください(複数可)：</h3>
+            <label>
+                <input type="checkbox" name="grade" value="1">1年</label>
+            <label>
+                <input type="checkbox" name="grade" value="2">2年</label>
+            <label>
+                <input type="checkbox" name="grade" value="3">3年</label>
+            <label>
+                <input type="checkbox" name="grade" value="4">4年</label>
+        </div>
+        <div id="selectSem">
+            <h3>時間割を作成する学期を選択してください：</h3>
+            <label>
+                <input type="radio" name="semester" value="A" checked>前期</label>
+            <label>
+                <input type="radio" name="semester" value="B">後期</label>
+        </div>
+        <div id="selectTea">
+            <h3>教職科目を履修していますか？</h3>
+            <label>
+                <input type="radio" name="teacher" value="false" checked>いいえ</label>
+            <label>
+                <input type="radio" name="teacher" value="true">はい</label>
+        </div>
+        <div id="confirmMsg">
+            <h3>以下の内容でよろしいですか？</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>学部</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>学科・専攻</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>学年</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>学期</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>教職科目</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="settingButtons">
+            <a id="try" class="button">ためす</a>
+            <a id="prev" class="button">戻る</a>
+            <span id="page"></span>
+            <a id="next" class="button">次へ<!--&#xf054;--></a>
+            <a id="nextDummy" class="button" style="background:#ddd;cursor:default">次へ</a>
+            <a id="settingDone" class="button">完了</a>
+        </div>
+    </div>
+
+    <!-- インポートとエクスポート -->
+    <div id="port" class="skel-layers-fixed float">
+        <a id="export" class="button">書き出し</a><a id="import" class="button">読み込み</a>
+        <textarea id='portArea'></textarea>
+    </div>
+
+
+
+</body>
+
+</html>
